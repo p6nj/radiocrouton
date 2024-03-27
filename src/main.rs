@@ -1,9 +1,18 @@
-use warp::Filter;
+#![feature(proc_macro_hygiene, decl_macro)]
+
+#[macro_use]
+extern crate rocket;
+
+#[get("/")]
+fn index() -> &'static str {
+    "Hello, world!"
+}
 
 #[tokio::main]
 async fn main() {
-    let hi = warp::path("hello")
-        .and(warp::header("user-agent"))
-        .map(|agent: String| format!("Your agent is {}", agent));
-    warp::serve(hi).run(([127, 0, 0, 1], 80)).await;
+    rocket::build()
+        .mount("/", routes![index])
+        .launch()
+        .await
+        .unwrap();
 }

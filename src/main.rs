@@ -1,11 +1,6 @@
 #![feature(proc_macro_hygiene, decl_macro)]
-
+use rocket::{config::TlsConfig, get, routes, Config};
 use std::{net::Ipv6Addr, str::FromStr};
-
-use rocket::{config::TlsConfig, Config};
-
-#[macro_use]
-extern crate rocket;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -19,8 +14,8 @@ async fn main() {
         port: 443,
         workers: 1,
         tls: Some(TlsConfig::from_bytes(
-            "../../Downloads/radiocrouton.fr_ssl_certificate.cer",
-            "../../radiocrouton.fr_private_key.key",
+            include_bytes!("../../Downloads/radiocrouton.fr_ssl_certificate.cer"),
+            include_bytes!("../../radiocrouton.fr_private_key.key"),
         )),
         ..Default::default()
     })
